@@ -1,0 +1,6 @@
+[build]
+cmds = ["npm --prefix server install", "npm --prefix server run build"]
+start = "npm --prefix server start"
+
+[build.nix]
+pkgs = ["nodejs_18"]
