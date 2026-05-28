@@ -13,33 +13,17 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-// Dynamic CORS to allow localhost and local network IPs
+// CORS configuration - allow all origins for now
 const corsOptions = {
-  origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
-    // Allow requests with no origin (like mobile apps, curl, Postman)
-    if (!origin) {
-      return callback(null, true);
-    }
-
-    // Allow localhost and local IPs
-    const isLocalhost = origin.includes("localhost") || origin.includes("127.0.0.1");
-    const isPrivateIP = /^https?:\/\/(192\.168\.|10\.|172\.)/.test(origin);
-    const isVercelOrCustom = origin.includes(".vercel.app") || origin.includes("ndertoks.app");
-    const isFrontendURL = process.env.FRONTEND_URL && origin.includes(new URL(process.env.FRONTEND_URL).hostname);
-
-    if (isLocalhost || isPrivateIP || isVercelOrCustom || isFrontendURL) {
-      callback(null, true);
-    } else {
-      console.log(`CORS blocked origin: ${origin}`);
-      callback(null, true); // Allow for now to debug
-    }
-  },
+  origin: true,
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
+
+// Apply CORS to all routes
 app.use(cors(corsOptions));
-// Explicitly handle OPTIONS for all routes
+// Explicitly handle preflight requests
 app.options("*", cors(corsOptions));
 // Increase payload limit to 10MB for image uploads (base64 encoded)
 app.use(express.json({ limit: "10mb" }));
