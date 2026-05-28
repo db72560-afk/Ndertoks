@@ -24,10 +24,12 @@ const corsOptions = {
     // Allow localhost and local IPs
     const isLocalhost = origin.includes("localhost");
     const isLocal127 = origin.includes("127.0.0.1");
-    const isPrivateIP = /^http:\/\/192\.168\.|^http:\/\/10\.|^http:\/\/172\./.test(origin);
-    const isAllowedProduction = origin.includes("project-pxvmm.vercel.app") || origin === process.env.FRONTEND_URL;
+    const isPrivateIP = /^https?:\/\/(192\.168\.|10\.|172\.)/.test(origin);
+    const isVercelApp = origin.includes(".vercel.app");
+    const isCustomDomain = origin.includes("ndertoks.app");
+    const isFrontendURL = process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL;
 
-    if (isLocalhost || isLocal127 || isPrivateIP || isAllowedProduction) {
+    if (isLocalhost || isLocal127 || isPrivateIP || isVercelApp || isCustomDomain || isFrontendURL) {
       callback(null, true);
     } else {
       callback(new Error("CORS policy violation"), false);
