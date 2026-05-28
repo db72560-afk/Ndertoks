@@ -37,12 +37,19 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const data = await apiClient.get("/api/admin/stats", token!);
+        if (!token) {
+          console.error("No token available");
+          setLoading(false);
+          return;
+        }
+        console.log("Fetching admin stats with token:", token.substring(0, 20) + "...");
+        const data = await apiClient.get("/api/admin/stats", token);
         setStats(data);
       } catch (error: any) {
+        console.error("Failed to load statistics:", error);
         toast({
           title: "Error",
-          description: "Failed to load statistics",
+          description: error.message || "Failed to load statistics",
           variant: "destructive",
         });
       } finally {
@@ -52,6 +59,8 @@ const AdminDashboard = () => {
 
     if (token) {
       fetchStats();
+    } else {
+      setLoading(false);
     }
   }, [token, toast]);
 
