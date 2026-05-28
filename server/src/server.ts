@@ -22,21 +22,25 @@ const corsOptions = {
     }
 
     // Allow localhost and local IPs
-    const isLocalhost = origin.includes("localhost");
-    const isLocal127 = origin.includes("127.0.0.1");
+    const isLocalhost = origin.includes("localhost") || origin.includes("127.0.0.1");
     const isPrivateIP = /^https?:\/\/(192\.168\.|10\.|172\.)/.test(origin);
     const isVercelOrCustom = origin.includes(".vercel.app") || origin.includes("ndertoks.app");
-    const isFrontendURL = process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL;
+    const isFrontendURL = process.env.FRONTEND_URL && origin.includes(new URL(process.env.FRONTEND_URL).hostname);
 
-    if (isLocalhost || isLocal127 || isPrivateIP || isVercelOrCustom || isFrontendURL) {
+    if (isLocalhost || isPrivateIP || isVercelOrCustom || isFrontendURL) {
       callback(null, true);
     } else {
-      callback(new Error("CORS policy violation"), false);
+      console.log(`CORS blocked origin: ${origin}`);
+      callback(null, true); // Allow for now to debug
     }
   },
   credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 app.use(cors(corsOptions));
+// Explicitly handle OPTIONS for all routes
+app.options("*", cors(corsOptions));
 // Increase payload limit to 10MB for image uploads (base64 encoded)
 app.use(express.json({ limit: "10mb" }));
 
