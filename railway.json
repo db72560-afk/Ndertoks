@@ -1,0 +1,4 @@
+{
+  "buildCommand": "npm --prefix server run build",
+  "startCommand": "npm --prefix server start"
+}
