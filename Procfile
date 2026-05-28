@@ -1,1 +1,1 @@
-web: npm --prefix=server run build && npm --prefix=server start
+web: npm run build:server && npm run start:server

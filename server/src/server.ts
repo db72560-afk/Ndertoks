@@ -25,11 +25,10 @@ const corsOptions = {
     const isLocalhost = origin.includes("localhost");
     const isLocal127 = origin.includes("127.0.0.1");
     const isPrivateIP = /^https?:\/\/(192\.168\.|10\.|172\.)/.test(origin);
-    const isVercelApp = origin.includes(".vercel.app");
-    const isCustomDomain = origin.includes("ndertoks.app");
+    const isVercelOrCustom = origin.includes(".vercel.app") || origin.includes("ndertoks.app");
     const isFrontendURL = process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL;
 
-    if (isLocalhost || isLocal127 || isPrivateIP || isVercelApp || isCustomDomain || isFrontendURL) {
+    if (isLocalhost || isLocal127 || isPrivateIP || isVercelOrCustom || isFrontendURL) {
       callback(null, true);
     } else {
       callback(new Error("CORS policy violation"), false);
