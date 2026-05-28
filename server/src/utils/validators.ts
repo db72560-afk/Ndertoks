@@ -93,6 +93,16 @@ export const createListingSchema = z.object({
   parcelType: z
     .enum(["Industriale", "Rezidenciale", "Komerciale"])
     .optional(),
+  buildingCompensation: z.number().min(0).max(100).optional(),
+  priceOptions: z
+    .array(
+      z.object({
+        cashAmount: z.number().min(0).optional(),
+        compensationPercentage: z.number().min(0).max(100).optional(),
+        description: z.string().optional(),
+      })
+    )
+    .optional(),
   // Contractor fields
   specialty: z.string().optional(),
   rating: z.number().min(0).max(5).optional(),

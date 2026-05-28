@@ -1,4 +1,21 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+// Detect API URL dynamically based on current host
+const getApiUrl = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  
+  // If environment variable is set, use it
+  if (envUrl) {
+    return envUrl;
+  }
+
+  // Otherwise, use the current host with port 5000
+  const protocol = window.location.protocol; // http: or https:
+  const hostname = window.location.hostname; // localhost, 192.168.x.x, etc.
+  const port = 5000;
+  
+  return `${protocol}//${hostname}:${port}`;
+};
+
+const API_URL = getApiUrl();
 
 export const apiClient = {
   async get(endpoint: string, token?: string, params?: Record<string, any>) {

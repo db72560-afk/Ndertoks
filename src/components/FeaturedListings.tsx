@@ -15,6 +15,11 @@ interface Listing {
   image?: string;
   views?: number;
   inquiries?: number;
+  priceOptions?: Array<{
+    cashAmount?: number;
+    compensationPercentage?: number;
+    description?: string;
+  }>;
 }
 
 const FeaturedListings = () => {
@@ -129,9 +134,26 @@ const FeaturedListings = () => {
                     </div>
                     
                     <div className="flex items-end justify-between">
-                      <span className="font-bold text-primary text-sm">
-                        €{item.price ? item.price.toLocaleString() : "POD"}
-                      </span>
+                      <div className="flex flex-col gap-1">
+                        {item.priceOptions && item.priceOptions.length > 0 ? (
+                          <div className="font-bold text-primary text-xs space-y-1">
+                            {item.priceOptions.slice(0, 2).map((option, idx) => (
+                              <div key={idx} className="text-xs">
+                                {option.description}
+                              </div>
+                            ))}
+                            {item.priceOptions.length > 2 && (
+                              <div className="text-xs text-muted-foreground">
+                                +{item.priceOptions.length - 2} më shumë
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="font-bold text-primary text-sm">
+                            €{item.price ? item.price.toLocaleString() : "POD"}
+                          </span>
+                        )}
+                      </div>
                       <span className="text-xs text-muted-foreground">
                         👁 {item.views || 0}
                       </span>

@@ -202,4 +202,24 @@ router.patch("/:id/inquiries", async (req, res: Response) => {
   }
 });
 
+// Admin: Delete all listings (DANGEROUS - use before deployment)
+router.delete(
+  "/admin/delete-all",
+  verifyToken,
+  checkRole("Admin"),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const result = await Listing.deleteMany({});
+
+      return res.json({
+        message: "All listings deleted successfully",
+        deletedCount: result.deletedCount,
+      });
+    } catch (error) {
+      console.error("Delete all listings error:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+
 export default router;

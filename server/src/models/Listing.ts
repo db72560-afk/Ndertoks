@@ -19,6 +19,12 @@ export interface IListing extends Document {
   // Parcel specific fields
   area?: number;
   parcelType?: "Industriale" | "Rezidenciale" | "Komerciale";
+  buildingCompensation?: number; // % kompenzim i ndërtimit (deprecated, use priceOptions)
+  priceOptions?: Array<{
+    cashAmount?: number; // in euros
+    compensationPercentage?: number; // 0-100
+    description?: string; // custom label like "€10,000 cash" or "40% kompenzim"
+  }>;
   // Contractor specific fields
   specialty?: string;
   rating?: number;
@@ -80,6 +86,27 @@ const listingSchema = new Schema<IListing>(
       type: String,
       enum: ["Industriale", "Rezidenciale", "Komerciale"],
     },
+    buildingCompensation: {
+      type: Number,
+      min: 0,
+      max: 100,
+    },
+    priceOptions: [
+      {
+        cashAmount: {
+          type: Number,
+          min: 0,
+        },
+        compensationPercentage: {
+          type: Number,
+          min: 0,
+          max: 100,
+        },
+        description: {
+          type: String,
+        },
+      },
+    ],
     // Contractor specific
     specialty: {
       type: String,

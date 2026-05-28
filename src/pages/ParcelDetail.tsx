@@ -17,6 +17,12 @@ interface Parcel {
   area: number;
   parcelType: string;
   image: string;
+  buildingCompensation?: number;
+  priceOptions?: Array<{
+    cashAmount?: number;
+    compensationPercentage?: number;
+    description?: string;
+  }>;
   userId: {
     fullName: string;
     companyName: string;
@@ -138,15 +144,43 @@ const ParcelDetail = () => {
                 {parcel.area.toLocaleString()} m²
               </span>
             </div>
-            <div className="mb-8 rounded-lg border bg-muted/50 p-6">
-              <p className="text-sm text-muted-foreground">Çmimi</p>
-              <p className="text-4xl font-bold text-primary">
-                €{parcel.price.toLocaleString()}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                €{(parcel.price / parcel.area).toFixed(2)} / m²
-              </p>
-            </div>
+            {parcel.priceOptions && parcel.priceOptions.length > 0 ? (
+              <div className="mb-8 space-y-3">
+                <p className="text-sm font-semibold text-foreground">Opcione Çmimi Disponuese:</p>
+                <div className="grid gap-3">
+                  {parcel.priceOptions.map((option, idx) => (
+                    <div key={idx} className="rounded-lg border-2 border-primary bg-primary/5 p-6">
+                      <p className="text-xl font-bold text-primary">
+                        {option.description}
+                      </p>
+                      {option.cashAmount !== undefined && option.compensationPercentage !== undefined && (
+                        <p className="text-xs text-muted-foreground mt-2">
+                          €{option.cashAmount.toLocaleString()} + {option.compensationPercentage}% kompenzim ndërtimi
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="mb-8 rounded-lg border bg-muted/50 p-6">
+                <p className="text-sm text-muted-foreground">Çmimi</p>
+                <p className="text-4xl font-bold text-primary">
+                  €{parcel.price.toLocaleString()}
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  €{(parcel.price / parcel.area).toFixed(2)} / m²
+                </p>
+              </div>
+            )}
+            {parcel.buildingCompensation !== undefined && parcel.buildingCompensation > 0 && !parcel.priceOptions && (
+              <div className="mb-8 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900 p-4">
+                <p className="text-sm text-blue-600 dark:text-blue-300">Kompenzim Ndërtimi</p>
+                <p className="text-2xl font-bold text-blue-700 dark:text-blue-200">
+                  {parcel.buildingCompensation}%
+                </p>
+              </div>
+            )}
 
             {parcel.description && (
               <div className="mb-8">

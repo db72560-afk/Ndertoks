@@ -16,6 +16,12 @@ interface Parcel {
   area: number;
   price: number;
   parcelType?: string;
+  buildingCompensation?: number;
+  priceOptions?: Array<{
+    cashAmount?: number;
+    compensationPercentage?: number;
+    description?: string;
+  }>;
 }
 
 const Parcels = () => {
@@ -109,8 +115,26 @@ const Parcels = () => {
                       <span className="flex items-center gap-1 text-sm text-muted-foreground">
                         <Maximize className="h-4 w-4" /> {parcel.area.toLocaleString()} m²
                       </span>
-                      <span className="text-lg font-bold text-primary">€{parcel.price.toLocaleString()}</span>
                     </div>
+                    {parcel.priceOptions && parcel.priceOptions.length > 0 ? (
+                      <div className="mt-3 pt-3 border-t border-border space-y-2">
+                        <p className="text-xs font-medium text-muted-foreground">Opcione Çmimi:</p>
+                        {parcel.priceOptions.map((option, idx) => (
+                          <div key={idx} className="p-2 rounded bg-primary/10 border border-primary/20">
+                            <p className="font-semibold text-primary text-sm">{option.description}</p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="mt-3 text-lg font-bold text-primary">€{parcel.price.toLocaleString()}</div>
+                    )}
+                    {parcel.buildingCompensation !== undefined && parcel.buildingCompensation > 0 && !parcel.priceOptions && (
+                      <div className="mt-2 pt-2 border-t border-border">
+                        <Badge variant="outline" className="text-xs">
+                          Kompenzim: {parcel.buildingCompensation}%
+                        </Badge>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </Link>

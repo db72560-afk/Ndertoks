@@ -13,18 +13,31 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
+// Dynamic CORS to allow localhost and local network IPs
 const corsOptions = {
-  origin: [
-    "http://localhost:5173",
-    "http://localhost:8080",
-    "http://localhost:8081",
-    "https://project-pxvmm.vercel.app/",
-    process.env.FRONTEND_URL || "http://localhost:5173"
-  ],
-  credentials: true
+  origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
+    // Allow requests with no origin (like mobile apps, curl, Postman)
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    // Allow localhost and local IPs
+    const isLocalhost = origin.includes("localhost");
+    const isLocal127 = origin.includes("127.0.0.1");
+    const isPrivateIP = /^http:\/\/192\.168\.|^http:\/\/10\.|^http:\/\/172\./.test(origin);
+    const isAllowedProduction = origin.includes("project-pxvmm.vercel.app") || origin === process.env.FRONTEND_URL;
+
+    if (isLocalhost || isLocal127 || isPrivateIP || isAllowedProduction) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS policy violation"), false);
+    }
+  },
+  credentials: true,
 };
 app.use(cors(corsOptions));
-app.use(express.json());
+// Increase payload limit to 10MB for image uploads (base64 encoded)
+app.use(express.json({ limit: "10mb" }));
 
 // MongoDB connection
 const connectDB = async () => {
