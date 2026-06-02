@@ -1,11 +1,20 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Building2, Hammer, Package, Pencil, Map, Truck, Info } from "lucide-react";
+import { Menu, X, Building2, Hammer, Package, Pencil, Map, Truck, Info, LogOut, User } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
+import { useAuth } from "@/context/AuthContext";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+    setMobileOpen(false);
+  };
 
   const navLinks = [
     { label: "Parcela", href: "/parcels", icon: Building2 },
@@ -40,14 +49,41 @@ const Navbar = () => {
 
         <div className="hidden items-center gap-3 md:flex">
           <ThemeToggle />
-          <Link to="/auth">
-            <Button variant="ghost" size="sm">
-              Kyçu
-            </Button>
-          </Link>
-          <Link to="/auth?tab=register">
-            <Button size="sm">Regjistrohu</Button>
-          </Link>
+          {isAuthenticated && user ? (
+            <>
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/10">
+                <User className="h-4 w-4 text-primary" />
+                <span className="text-sm font-medium text-foreground">{user.name || user.email}</span>
+              </div>
+              {user.role === "admin" && (
+                <Link to="/admin/dashboard">
+                  <Button variant="outline" size="sm">
+                    Admin
+                  </Button>
+                </Link>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleLogout}
+                className="gap-2"
+              >
+                <LogOut className="h-4 w-4" />
+                Dil
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link to="/auth">
+                <Button variant="ghost" size="sm">
+                  Kyçu
+                </Button>
+              </Link>
+              <Link to="/auth?tab=register">
+                <Button size="sm">Regjistrohu</Button>
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile toggle */}
@@ -105,23 +141,54 @@ const Navbar = () => {
 
               {/* Auth Buttons */}
               <div className="space-y-2 pt-2">
-                <Link to="/auth" onClick={() => setMobileOpen(false)} className="block">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full font-medium hover:bg-primary/10"
-                  >
-                    Kyçu
-                  </Button>
-                </Link>
-                <Link to="/auth?tab=register" onClick={() => setMobileOpen(false)} className="block">
-                  <Button
-                    size="sm"
-                    className="w-full font-medium bg-primary hover:bg-primary/90"
-                  >
-                    Regjistrohu
-                  </Button>
-                </Link>
+                {isAuthenticated && user ? (
+                  <>
+                    <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 mb-3">
+                      <User className="h-4 w-4 text-primary" />
+                      <span className="text-sm font-medium text-foreground">{user.name || user.email}</span>
+                    </div>
+                    {user.role === "admin" && (
+                      <Link to="/admin/dashboard" onClick={() => setMobileOpen(false)} className="block">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full font-medium hover:bg-primary/10"
+                        >
+                          Admin Dashboard
+                        </Button>
+                      </Link>
+                    )}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full font-medium hover:bg-destructive/10 text-destructive"
+                      onClick={handleLogout}
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Dil
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/auth" onClick={() => setMobileOpen(false)} className="block">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full font-medium hover:bg-primary/10"
+                      >
+                        Kyçu
+                      </Button>
+                    </Link>
+                    <Link to="/auth?tab=register" onClick={() => setMobileOpen(false)} className="block">
+                      <Button
+                        size="sm"
+                        className="w-full font-medium bg-primary hover:bg-primary/90"
+                      >
+                        Regjistrohu
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
