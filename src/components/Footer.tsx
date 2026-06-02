@@ -1,4 +1,3 @@
-import { Building2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -8,9 +7,7 @@ const Footer = () => {
         <div className="grid gap-8 md:grid-cols-4">
           <div>
             <Link to="/" className="mb-4 flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                <Building2 className="h-4 w-4 text-primary-foreground" />
-              </div>
+              <img src="/logo.png" alt="NdërtoKS" className="h-8 w-8 drop-shadow-sm" />
               <span className="text-lg font-bold text-foreground">NdërtoKS</span>
             </Link>
             <p className="text-sm text-muted-foreground">
@@ -40,7 +37,7 @@ const Footer = () => {
             <h4 className="mb-3 text-sm font-semibold text-foreground">Kontakti</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>info@ndertoks.com</li>
-              <li>+383 44 000 000</li>
+              <li>+383 49 714 421</li>
               <li>Prishtinë, Kosovë</li>
             </ul>
           </div>
