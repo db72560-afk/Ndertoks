@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Building2, Hammer, Package, Pencil, Map, Truck, Info, LogOut, User, Home } from "lucide-react";
+import { Menu, X, Building2, Hammer, Package, Pencil, Map, Truck, Info, LogOut, User } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { useAuth } from "@/context/AuthContext";
 
@@ -18,7 +18,6 @@ const Navbar = () => {
 
   const navLinks = [
     { label: "Parcela", href: "/parcels", icon: Building2 },
-    { label: "Lokale", href: "/properties", icon: Home },
     { label: "Kontraktorë", href: "/contractors", icon: Hammer },
     { label: "Materiale", href: "/materials", icon: Package },
     { label: "Arkitekturë", href: "/architects", icon: Pencil },
